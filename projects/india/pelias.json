@@ -1,13 +1,11 @@
 {
   "logger": {
-    "level": "debug",
+    "level": "info",
     "timestamp": false
   },
   "esclient": {
     "apiVersion": "7.5",
-    "hosts": [
-      { "host": "elasticsearch" }
-    ]
+    "hosts": [{ "host": "elasticsearch" }]
   },
   "elasticsearch": {
     "settings": {
@@ -18,16 +16,17 @@
       }
     }
   },
+  "acceptance-tests": {
+    "endpoints": {
+      "docker": "http://api:4000/v1/"
+    }
+  },
   "api": {
     "services": {
-      "pip": { "url": "http://pip:4200" },
-      "libpostal": { "url": "http://libpostal:4400" },
       "placeholder": { "url": "http://placeholder:4100" },
-      "interpolation": { "url": "http://interpolation:4300" }
-    },
-    "defaultParameters": {
-      "focus.point.lat": 46.61,
-      "focus.point.lon": 2.45
+      "pip": { "url": "http://pip:4200" },
+      "interpolation": { "url": "http://interpolation:4300" },
+      "libpostal": { "url": "http://libpostal:4400" }
     }
   },
   "imports": {
@@ -36,31 +35,31 @@
     },
     "geonames": {
       "datapath": "/data/geonames",
-      "countryCode": "FR"
+      "countryCode": "IN"
     },
     "openstreetmap": {
       "download": [
-        { "sourceURL": "http://download.geofabrik.de/europe/france-latest.osm.pbf" }
+        {
+          "sourceURL": "http://download.geofabrik.de/asia/india-latest.osm.pbf"
+        }
       ],
       "leveldbpath": "/tmp",
       "datapath": "/data/openstreetmap",
-      "import": [{
-        "filename": "france-latest.osm.pbf"
-      }]
-    },
-    "openaddresses": {
-      "datapath": "/data/openaddresses",
-      "files": ["fr/countrywide.csv"]
+      "import": [
+        {
+          "filename": "india-latest.osm.pbf"
+        }
+      ]
     },
     "polyline": {
       "datapath": "/data/polylines",
-      "files": [ "extract.0sv" ]
+      "files": ["extract.0sv"]
     },
     "whosonfirst": {
       "datapath": "/data/whosonfirst",
       "importPostalcodes": true,
-      "countryCode": "FR",
-      "importPlace": [ "136253037", "85633147" ]
+      "countryCode": "IN",
+      "importPlace": ["85632469"]
     }
   }
 }
