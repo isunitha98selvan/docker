@@ -40,6 +40,12 @@ You will need to have a [modern version of `docker`](https://docs.docker.com/eng
 
 This project supports Linux and Mac OSX operatings systems. Windows is currently [not supported](https://github.com/pelias/docker/issues/124).
 
+### Permissions
+
+In order to ensure security, Pelias docker containers, and the `pelias` helper script, will not run as a root user!
+
+Be sure you are running as a non-root user and that this user can execute `docker` commands. See the Docker documentation article [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to do this.
+
 ## Requirements for Linux
 - Install `util-linux` using your distribution's package manager
   - Alpine Linux: `sudo apk add util-linux`
@@ -54,6 +60,18 @@ This project supports Linux and Mac OSX operatings systems. Windows is currently
 Scripts can easily download tens of GB of geographic data, so ensure you have enough free disk space!
 
 At least 8GB RAM is required.
+
+## How long will it take?
+
+You should be able to get started with the default Portland-metro area build in under an hour with a fast internet connection.
+
+On a machine with ~32 CPU cores, a full planet build can be done in under a day with the right settings.
+
+The interpolation build (`pelias prepare interpolation`), which is [single threaded](https://github.com/pelias/interpolation/issues/264) will take 6+ days
+for the full planet. We generally recommend skipping it when you are first
+getting started.
+
+For more info on time estimates and hardware requirements for large build see our [full planet considerations](https://github.com/pelias/documentation/blob/master/full_planet_considerations.md) documentation.
 
 ## Quickstart build script
 
@@ -70,7 +88,8 @@ set -x
 git clone https://github.com/pelias/docker.git && cd docker
 
 # install pelias script
-ln -s "$(pwd)/pelias" /usr/local/bin/pelias
+# this is the _only_ setup command that should require `sudo`
+sudo ln -s "$(pwd)/pelias" /usr/local/bin/pelias
 
 # cd into the project directory
 cd projects/portland-metro
@@ -81,12 +100,6 @@ cd projects/portland-metro
 mkdir ./data
 sed -i '/DATA_DIR/d' .env
 echo 'DATA_DIR=./data' >> .env
-
-# configure docker to write files as your local user
-# see: https://github.com/pelias/docker#variable-docker_user
-# note: use 'gsed' instead of 'sed' on a Mac
-sed -i '/DOCKER_USER/d' .env
-echo "DOCKER_USER=$(id -u)" >> .env
 
 # run build
 pelias compose pull
@@ -120,7 +133,7 @@ Advanced users may have a preference how this is done on their system, but a bas
 git clone https://github.com/pelias/docker.git && cd docker
 
 # install pelias script
-ln -s "$(pwd)/pelias" /usr/local/bin/pelias
+sudo ln -s "$(pwd)/pelias" /usr/local/bin/pelias
 ```
 
 Once the command is correctly installed you should be able to run the following command to confirm the pelias command is available on your path:
@@ -170,7 +183,6 @@ Then use your text editor to modify the `.env` file to reflect your new path, it
 ```bash
 COMPOSE_PROJECT_NAME=pelias
 DATA_DIR=/tmp/pelias
-DOCKER_USER=1000
 ```
 
 You can then list the environment variables to ensure they have been correctly set:
@@ -187,9 +199,7 @@ Note: changing the `COMPOSE_PROJECT_NAME` variable is not advisable unless you k
 
 ### Variable: DOCKER_USER
 
-All processes in Pelias containers are run as non-root users. By default, the UID of the processes will be `1000`, which is the first user ID on _most_ Linux systems and is likely to be a good option. However, if restricting file permissions in your data directory to a different user or group is important, this can be overridden by setting the `DOCKER_USER` variable.
-
-This variable can take just a UID or a UID:GID combination such as `1000:1000`. See the [docker-compose](https://docs.docker.com/compose/compose-file/#domainname-hostname-ipc-mac_address-privileged-read_only-shm_size-stdin_open-tty-user-working_dir) and [docker run](https://docs.docker.com/engine/reference/run/#user) documentation on controlling Docker container users for more information.
+This variable is no longer used, and will be ignored. If you still have it in your `.env` file, you can safely remove it.
 
 ## CLI commands
 
