@@ -4,10 +4,10 @@
     "timestamp": false
   },
   "esclient": {
-    "apiVersion": "7.10",
-    "hosts": [{ "host": "elasticsearch" }]
+    "apiVersion": "7.7",
+    "hosts": [{ "host": "elasticsearch_pelias" }]
   },
-  "elasticsearch": {
+  "elasticsearch_pelias": {
     "settings": {
       "index": {
         "refresh_interval": "10s",
