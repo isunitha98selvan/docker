@@ -7,7 +7,7 @@ function elastic_start(){
   mkdir -p $DATA_DIR/elasticsearch
   # attemp to set proper permissions if running as root
   chown $DOCKER_USER $DATA_DIR/elasticsearch 2>/dev/null || true
-  compose_exec up -d elasticsearch
+  compose_exec up -d elasticsearch_pelias
 }
 
 function elastic_stop(){ compose_exec kill elasticsearch; }
